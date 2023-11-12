@@ -5,7 +5,7 @@ import tflite_runtime.interpreter as tflite
 
 
 # Load the TFLite model and allocate tensors
-interpreter = tflite.Interpreter(model_path="regression_model.tflite")
+interpreter = tflite.Interpreter(model_path="./regression_model.tflite")
 interpreter.allocate_tensors()
 
 # Get input and output tensors
@@ -47,3 +47,14 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/plain')
         self.end_headers()
         self.wfile.write(f"The model predicted: {prediction}".encode())
+
+
+# if __name__ == "__main__":
+#     # Ask user for a number and convert to float
+#     user_input = float(input("Enter a number: "))
+#
+#     # Make a prediction
+#     prediction = predict(user_input)
+#
+#     # Print the prediction
+#     print("Prediction:", prediction)
