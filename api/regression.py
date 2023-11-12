@@ -1,7 +1,8 @@
-from http.server import BaseHTTPRequestHandler
-from urllib import parse
-from pathlib import Path
 import os
+from http.server import BaseHTTPRequestHandler
+from pathlib import Path
+from urllib import parse
+
 import numpy as np
 import tflite_runtime.interpreter as tflite
 
@@ -54,6 +55,7 @@ class handler(BaseHTTPRequestHandler):
             self.wfile.write(f"The model predicted: {prediction[0]:.2f}".encode())
 
 
+# To run locally
 if __name__ == "__main__":
     # Ask user for a number and convert to float
     user_input = float(input("Enter a number: "))
