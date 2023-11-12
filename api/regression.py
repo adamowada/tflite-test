@@ -1,11 +1,15 @@
 from http.server import BaseHTTPRequestHandler
 from urllib import parse
+from pathlib import Path
+import os
 import numpy as np
 import tflite_runtime.interpreter as tflite
 
 
 # Load the TFLite model and allocate tensors
-interpreter = tflite.Interpreter(model_path="./regression_model.tflite")
+root_directory = Path(__file__).resolve().parent.parent
+model_path = os.path.join(root_directory, 'model', 'regression_model.tflite')
+interpreter = tflite.Interpreter(model_path=model_path)
 interpreter.allocate_tensors()
 
 # Get input and output tensors
@@ -30,31 +34,31 @@ def predict(number):
     return output_data[0]
 
 
-class handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        # Take the url query string and create a dictionary of parameters
-        url = self.path
-        url_components = parse.urlsplit(url)
-        query_string_list = parse.parse_qsl(url_components.query)
-        dictionary = dict(query_string_list)  # /?number=something
-
-        # Do stuff
-        if dictionary.get("number"):
-            prediction = predict(dictionary["number"])
-
-        # Forming the response
-        self.send_response(200)
-        self.send_header('Content-type', 'text/plain')
-        self.end_headers()
-        self.wfile.write(f"The model predicted: {prediction}".encode())
-
-
-# if __name__ == "__main__":
-#     # Ask user for a number and convert to float
-#     user_input = float(input("Enter a number: "))
+# class handler(BaseHTTPRequestHandler):
+#     def do_GET(self):
+#         # Take the url query string and create a dictionary of parameters
+#         url = self.path
+#         url_components = parse.urlsplit(url)
+#         query_string_list = parse.parse_qsl(url_components.query)
+#         dictionary = dict(query_string_list)  # /?number=something
 #
-#     # Make a prediction
-#     prediction = predict(user_input)
+#         # Do stuff
+#         if dictionary.get("number"):
+#             prediction = predict(dictionary["number"])
 #
-#     # Print the prediction
-#     print("Prediction:", prediction)
+#         # Forming the response
+#         self.send_response(200)
+#         self.send_header('Content-type', 'text/plain')
+#         self.end_headers()
+#         self.wfile.write(f"The model predicted: {parediction}".encode())
+
+
+if __name__ == "__main__":
+    # Ask user for a number and convert to float
+    user_input = float(input("Enter a number: "))
+
+    # Make a prediction
+    prediction = predict(user_input)
+
+    # Print the prediction
+    print("Prediction:", prediction)
