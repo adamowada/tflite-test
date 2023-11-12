@@ -42,23 +42,24 @@ class handler(BaseHTTPRequestHandler):
         query_string_list = parse.parse_qsl(url_components.query)
         dictionary = dict(query_string_list)  # /?number=something
 
-        # Do stuff
-        if dictionary.get("number"):
-            prediction = predict(dictionary["number"])
-
         # Forming the response
         self.send_response(200)
         self.send_header('Content-type', 'text/plain')
         self.end_headers()
-        self.wfile.write(f"The model predicted: {prediction}".encode())
+
+        if dictionary.get("number") is None:
+            self.wfile.write("Please enter a number.".encode())
+        else:
+            prediction = predict(dictionary["number"])
+            self.wfile.write(f"The model predicted: {prediction[0]:.2f}".encode())
 
 
-# if __name__ == "__main__":
-#     # Ask user for a number and convert to float
-#     user_input = float(input("Enter a number: "))
-#
-#     # Make a prediction
-#     prediction = predict(user_input)
-#
-#     # Print the prediction
-#     print("Prediction:", prediction)
+if __name__ == "__main__":
+    # Ask user for a number and convert to float
+    user_input = float(input("Enter a number: "))
+
+    # Make a prediction
+    prediction = predict(user_input)
+
+    # Print the prediction
+    print(f"The model predicted: {prediction[0]:.2f}")
